@@ -85,7 +85,7 @@ public partial class MainWindow : Window
             Glavnoe.Posledstvie.Add(Forma);
         }
     }
-    void MestoFiguri(Point Tuyk)
+    void MestoFormi(Point Tuyk)
     {
         double visota = Forma is Polygon ? 50 : Forma.Bounds.Width;
         double shirina = Forma is Polygon ? 50 : Forma.Bounds.Height;
@@ -93,25 +93,21 @@ public partial class MainWindow : Window
         Canvas.SetTop(Forma, Tuyk.Y - shirina /2);
 
     }
-    
-    public void NazatieKvadrata(object? nalichie, RoutedEventArgs a)
+    private void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         Vibronoe = "Это квадрат";
         Opredelenie = false;
     }
-    public void NazatieTriugol(object? nalichie, RoutedEventArgs a)
+    private void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         Vibronoe = "Это триугольник";
         Opredelenie = false;
     }
-    public void NazatieRomb(object? nalichie, RoutedEventArgs a)
+    private void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         Vibronoe = "Это ромб";
         Opredelenie = false;
     }
-    private void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => NazatieKvadrata("Квадрат");
-    private void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => NazatieTriugol("Прямоугольник");
-    private void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => NazatieRomb("Ромб");
     public void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
     {
         Opredelenie = true;
