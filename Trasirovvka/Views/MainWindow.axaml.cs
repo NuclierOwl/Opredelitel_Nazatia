@@ -96,17 +96,17 @@ public partial class MainWindow : Window
     
     public void NazatieKvadrata(object? nalichie, RoutedEventArgs a)
     {
-        Kvadrata = "Это квадрат";
+        Vibronoe = "Это квадрат";
         Opredelenie = false;
     }
     public void NazatieTriugol(object? nalichie, RoutedEventArgs a)
     {
-        Kvadrata = "Это триугольник";
+        Vibronoe = "Это триугольник";
         Opredelenie = false;
     }
     public void NazatieRomb(object? nalichie, RoutedEventArgs a)
     {
-        Kvadrata = "Это ромб";
+        Vibronoe = "Это ромб";
         Opredelenie = false;
     }
     private void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => NazatieKvadrata("Квадрат");
