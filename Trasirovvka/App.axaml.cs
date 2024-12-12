@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Trasirovvka.ViewModels;
+using Trasirovvka.Views;
 
 namespace Trasirovvka
 {

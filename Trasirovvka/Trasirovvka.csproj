@@ -12,7 +12,13 @@
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
+	
+	<ItemGroup>
+		<None Remove="**\*.xaml" />
 
+		<Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
+	</ItemGroup>
+	
   <ItemGroup>
     <PackageReference Include="Aspose.Slides.NET" Version="24.12.0" />
     <PackageReference Include="Avalonia" Version="11.2.2" />

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using System;
@@ -11,16 +12,19 @@ using Brushes = Avalonia.Media.Brushes;
 using Point = Avalonia.Point;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
 
+namespace Trasirovvka.Views;
+
 public partial class MainWindow : Window
 {
     bool Opredelenie;
     TextBlock Itog;
     string Vibronoe;
     Shape? Forma;
-    Grid MainGrid;
-    MainWindow()
+    public MainWindow()
     {
         InitializeComponent();
+        Pole = new Canvas();
+        Format.Children.Add(Pole);
         Itog = new TextBlock
         {
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
@@ -28,7 +32,7 @@ public partial class MainWindow : Window
             Margin = new Thickness(5, 5, 15, 10),
             FontSize = 35
         };
-        MainGrid.Children.Add(Itog);
+        Format.Children.Add(Itog);
     }
 
     void UpdateItog(string Rezultat, IBrush cvet)
@@ -52,58 +56,73 @@ public partial class MainWindow : Window
     {
         Forma = Vibronoe switch
         {
-            "Квдрат" => CreateRectangle(),
+            "Квадрат" => CreateRectangle(),
             "Прямоугольник" => CreatePolygon(new List<Point>
-            {
-                new Point (30, 0),
-                new Point (70, 25),
-                new Point (40, 50),
-                new Point (20, 60),
-                new Point (0, 25)
-            }, Brushes.Aqua),
+        {
+            new Point (30, 0),
+            new Point (70, 25),
+            new Point (40, 50),
+            new Point (20, 60),
+            new Point (0, 25)
+        }, Brushes.Aqua),
             "Ромб" => CreatePolygon(new List<Point>
-            {
-                new Point(25, 0),
-                new Point(50, 13),
-                new Point(50, 38),
-                new Point(25, 50),
-                new Point(0, 38),
-                new Point(0, 13)
-            }, Brushes.PaleVioletRed),
+        {
+            new Point(25, 0),
+            new Point(50, 13),
+            new Point(50, 38),
+            new Point(25, 50),
+            new Point(0, 38),
+            new Point(0, 13)
+        }, Brushes.PaleVioletRed),
             _ => null
         };
+
         if (Forma != null)
         {
             MestoFormi(Tuyk);
-            MainGrid.Children.Add(Forma);
+            Pole.Children.Add(Forma);
         }
     }
-    void MestoFormi(Point Tuyk)
+    void MestoFormi(Point Tap)
     {
-        double visota = Forma is Polygon ? 50 : Forma.Bounds.Width;
-        double shirina = Forma is Polygon ? 50 : Forma.Bounds.Height;
-        Canvas.SetRight(Forma, Tuyk.X - visota / 2);
-        Canvas.SetTop(Forma, Tuyk.Y - shirina / 2);
-
+        double visota = Forma.Bounds.Height;
+        double shirina = Forma.Bounds.Width;
+        Canvas.SetLeft(Forma, Tap.X - shirina / 2);
+        Canvas.SetTop(Forma, Tap.Y - visota / 2);
     }
-    private void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    public void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
-        Vibronoe = "Это квадрат";
+        Vibronoe = "Квадрат";
         Opredelenie = false;
     }
-    private void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    public void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
-        Vibronoe = "Это триугольник";
+        Vibronoe = "Прямоугольник";
         Opredelenie = false;
     }
-    private void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    public void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
-        Vibronoe = "Это ромб";
+        Vibronoe = "Ромб";
         Opredelenie = false;
     }
     void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
     {
         Opredelenie = true;
+    }
+    public void NazatieVOkno(object? nalichie, PointerPressedEventArgs a)
+    {
+        var pointerPosition = a.GetPosition(Pole);
+
+        if (Opredelenie)
+        {
+            Popadanie(pointerPosition);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(Vibronoe)) return;
+
+        Pole.Children.Clear();
+        Otrisovka(pointerPosition);
     }
     IList<Point> GetMnogougolPoints(Polygon pol)
     {
@@ -140,7 +159,7 @@ public partial class MainWindow : Window
                 if (figura[i].X + (poi.Y - figura[i].Y) /
                     (figura[h].Y - figura[i].Y) * (figura[h].X - figura[i].X) < poi.X)
                 {
-                    vnutri = true;
+                    vnutri = !vnutri;
                 }
             }
             h = i;

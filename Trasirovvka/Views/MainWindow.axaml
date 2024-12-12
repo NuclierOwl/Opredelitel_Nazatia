@@ -1,7 +1,25 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="belonging.Views.MainWindow"
-        Title="Трасировка">
-	
+        x:Class="Trasirovvka.Views.MainWindow"
+        Title="Трасировка"
+		Icon="/Assets/avalonia-logo.ico"
+        Width="1200"
+        Height="800">
+	<Grid Name="Format">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*" />
+			<ColumnDefinition Width="5*" />
+		</Grid.ColumnDefinitions>
+		<Canvas Name="Pole"
+                Grid.Column="1"
+                Background="LightGray"
+                PointerPressed="NazatieVOkno" />
+
+		<StackPanel Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10">
+			<Button Content="Квадрат" Click="TuykKvadro" Margin="5"/>
+			<Button Content="Прямоугольник" Click="TuykPramo" Margin="5"/>
+			<Button Content="Ромб" Click="TuykRomb" Margin="5"/>
+			<Button Content="Проверить попадание" Click="NazatieOpredelitela" Margin="5"/>
+		</StackPanel>
+	</Grid>
 </Window>
-      
