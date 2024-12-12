@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Linq;
 using Brushes = Avalonia.Media.Brushes;
 using Point = Avalonia.Point;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
@@ -14,11 +14,11 @@ using Rectangle = Avalonia.Controls.Shapes.Rectangle;
 public partial class MainWindow : Window
 {
     bool Opredelenie;
-    TextBox Itog;
+    TextBlock Itog;
     string Vibronoe;
     Shape? Forma;
-
-    public MainWindow()
+    Grid MainGrid;
+    MainWindow()
     {
         InitializeComponent();
         Itog = new TextBlock
@@ -28,11 +28,11 @@ public partial class MainWindow : Window
             Margin = new Thickness(5, 5, 15, 10),
             FontSize = 35
         };
-        Glavnoe.Posledstvie.Add(Itog);
+        MainGrid.Children.Add(Itog);
     }
 
     /*
-      public void Nazatie(string f)
+       void Nazatie(string f)
          {
              Vibronoe = f;
              Modik = false;
@@ -82,15 +82,15 @@ public partial class MainWindow : Window
         if (Forma != null)
         {
             MestoFormi(Tuyk);
-            Glavnoe.Posledstvie.Add(Forma);
+            MainGrid.Children.Add(Forma);
         }
     }
     void MestoFormi(Point Tuyk)
     {
         double visota = Forma is Polygon ? 50 : Forma.Bounds.Width;
         double shirina = Forma is Polygon ? 50 : Forma.Bounds.Height;
-        Canvas.SetRight(Forma, Tuyk.X - visota /2);
-        Canvas.SetTop(Forma, Tuyk.Y - shirina /2);
+        Canvas.SetRight(Forma, Tuyk.X - visota / 2);
+        Canvas.SetTop(Forma, Tuyk.Y - shirina / 2);
 
     }
     private void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -108,22 +108,54 @@ public partial class MainWindow : Window
         Vibronoe = "Это ромб";
         Opredelenie = false;
     }
-    public void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
+    void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
     {
         Opredelenie = true;
     }
-
-    public bool Vnutri(Shape Figura, Point Tocka)
+    IList<Point> GetMnogougolPoints(Polygon pol)
     {
-        if (Figura is Rectangle pramoug)
+        return pol.Points
+            .Select(l => new Point(l.X + Canvas.GetLeft(pol), l.Y + Canvas.GetTop(pol)))
+            .ToList();
+    }
+    bool GetKvadroTocki(Rectangle rectangle, Point poi)
+    {
+        double verh = Canvas.GetTop(rectangle);
+        double levo = Canvas.GetLeft(rectangle);
+        return poi.X >= levo && poi.X <= levo + rectangle.Width && poi.Y >= verh && poi.Y <= levo + rectangle.Height;
+    }
+    bool Vnutri(Shape Figura, Point Tocka)
+    {
+        return Figura switch
         {
-
-        }
+            Rectangle r => GetKvadroTocki(r, Tocka),
+            Polygon pol => VnutriFigur(Tocka, GetMnogougolPoints(pol)),
+            _ => false
+        };
     }
 
 
 
-    public void Popadanie(Point Tuyk)
+    bool VnutriFigur(Point poi, IList<Point> figura)
+    {
+        int h = figura.Count - 1;
+        bool vnutri = false;
+        for (int i = 0; i < figura.Count; i++)
+        {
+            if (figura[h].Y < poi.Y && figura[i].Y >= poi.Y || figura[i].Y < poi.Y && figura[h].Y >= poi.Y)
+            {
+                if (figura[i].X + (poi.Y - figura[i].Y) /
+                    (figura[h].Y - figura[i].Y) * (figura[h].X - figura[i].X) < poi.X)
+                {
+                    vnutri = true;
+                }
+            }
+            h = i;
+        }
+        return vnutri;
+    }
+
+    void Popadanie(Point Tuyk)
     {
         if (Opredelenie)
         {
