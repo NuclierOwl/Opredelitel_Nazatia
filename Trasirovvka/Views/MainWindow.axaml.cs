@@ -31,13 +31,6 @@ public partial class MainWindow : Window
         MainGrid.Children.Add(Itog);
     }
 
-    /*
-       void Nazatie(string f)
-         {
-             Vibronoe = f;
-             Modik = false;
-         }
-    */
     void UpdateItog(string Rezultat, IBrush cvet)
     {
         Itog.Text = Rezultat;
