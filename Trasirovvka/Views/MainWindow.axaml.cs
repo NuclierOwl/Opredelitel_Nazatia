@@ -34,7 +34,6 @@ public partial class MainWindow : Window
         };
         Format.Children.Add(Itog);
     }
-
     void UpdateItog(string Rezultat, IBrush cvet)
     {
         Itog.Text = Rezultat;
@@ -62,8 +61,8 @@ public partial class MainWindow : Window
             new Point (30, 0),
             new Point (70, 25),
             new Point (40, 50),
-            new Point (20, 60),
-            new Point (0, 25)
+            new Point (25, 70),
+            new Point (0, 30)
         }, Brushes.Aqua),
             "Ромб" => CreatePolygon(new List<Point>
         {
@@ -76,7 +75,6 @@ public partial class MainWindow : Window
         }, Brushes.PaleVioletRed),
             _ => null
         };
-
         if (Forma != null)
         {
             MestoFormi(Tuyk);
@@ -145,9 +143,6 @@ public partial class MainWindow : Window
             _ => false
         };
     }
-
-
-
     bool VnutriFigur(Point poi, IList<Point> figura)
     {
         int h = figura.Count - 1;
@@ -166,7 +161,6 @@ public partial class MainWindow : Window
         }
         return vnutri;
     }
-
     void Popadanie(Point Tuyk)
     {
         if (Opredelenie)
