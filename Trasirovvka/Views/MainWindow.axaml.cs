@@ -8,6 +8,7 @@ using Avalonia.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Brushes = Avalonia.Media.Brushes;
 using Point = Avalonia.Point;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
@@ -34,13 +35,14 @@ public partial class MainWindow : Window
         };
         Format.Children.Add(Itog);
     }
-    void UpdateItog(string Rezultat, IBrush cvet)
+    async void UpdateItog(string Rezultat, IBrush cvet)
     {
         Itog.Text = Rezultat;
         Itog.Foreground = cvet;
         Console.WriteLine(Rezultat);
+        await Task.Delay(100);
     }
-    Rectangle CreateRectangle() => new Rectangle
+    Rectangle CreateKvadro() => new Rectangle
     {
         Width = 60,
         Height = 60,
@@ -55,8 +57,8 @@ public partial class MainWindow : Window
     {
         Forma = Vibronoe switch
         {
-            "Квадрат" => CreateRectangle(),
-            "Прямоугольник" => CreatePolygon(new List<Point>
+            "Квадрат" => CreateKvadro(),
+            "4-х угол" => CreatePolygon(new List<Point>
         {
             new Point (30, 0),
             new Point (70, 25),
@@ -83,31 +85,28 @@ public partial class MainWindow : Window
     }
     void MestoFormi(Point Tap)
     {
-        double visota = Forma.Bounds.Height;
-        double shirina = Forma.Bounds.Width;
+        double visota =Forma is Polygon ? 50 : Forma.Bounds.Height;
+        double shirina = Forma is Polygon ? 50 : Forma.Bounds.Width;
         Canvas.SetLeft(Forma, Tap.X - shirina / 2);
         Canvas.SetTop(Forma, Tap.Y - visota / 2);
     }
-    public void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
+    void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "Квадрат";
-        Opredelenie = false;
     }
-    public void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
+    void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
-        Vibronoe = "Прямоугольник";
-        Opredelenie = false;
+        Vibronoe = "4-х угол";
     }
-    public void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
+    void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "Ромб";
-        Opredelenie = false;
     }
     void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
     {
         Opredelenie = true;
     }
-    public void NazatieVOkno(object? nalichie, PointerPressedEventArgs a)
+    void NazatieVOkno(object? nalichie, PointerPressedEventArgs a)
     {
         var pointerPosition = a.GetPosition(Pole);
 
@@ -159,19 +158,50 @@ public partial class MainWindow : Window
             }
             h = i;
         }
-        return vnutri;
+        return vnutri || NaStorone(poi, figura);
+    }
+    bool NaStorone(Point poi, IList<Point> figura)
+    {
+        for (int i = 0; i < figura.Count; i++)
+        {
+            var nachalo = figura[i];
+            var konec = figura[(i + 1) % figura.Count];
+            if (NaLinie(poi, nachalo, konec))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    bool NaLinie(Point pervoe, Point vtoroe, Point tretie)
+    {
+        double crossProduct = (pervoe.Y - vtoroe.Y) * (tretie.X - vtoroe.X) - (pervoe.X - vtoroe.X) * (tretie.Y - vtoroe.Y);
+        if (Math.Abs(crossProduct) > 0.0001) return false;
+
+        double dotProduct = (pervoe.X - vtoroe.X) * (tretie.X - vtoroe.X) + (pervoe.Y - vtoroe.Y) * (tretie.Y - vtoroe.Y);
+        if (dotProduct < 0) return false;
+
+        double squaredLengthBA = (tretie.X - vtoroe.X) * (tretie.X - vtoroe.X) + (tretie.Y - vtoroe.Y) * (tretie.Y - vtoroe.Y);
+        return dotProduct <= squaredLengthBA;
     }
     void Popadanie(Point Tuyk)
     {
         if (Opredelenie)
         {
-            if (Forma != null && Vnutri(Forma, Tuyk))
+            if (Forma != null)
             {
-                UpdateItog("Попадание!", Brushes.Lime);
+                if (Vnutri(Forma,Tuyk))
+                {
+                    UpdateItog("Попадание!", Brushes.Lime);
+                }
+                else
+                {
+                    UpdateItog("Не попал!", Brushes.Crimson);
+                }
             }
             else
             {
-                UpdateItog("Не попал!", Brushes.Crimson);
+                UpdateItog("Здесь нечего нет!", Brushes.Orange);
             }
         }
     }
