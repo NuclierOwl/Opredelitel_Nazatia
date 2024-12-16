@@ -16,6 +16,7 @@ namespace Trasirovvka.Views;
 
 public partial class MainWindow : Window
 {
+    Random sluchai = new Random();
     bool Opredelenie;
     TextBlock Itog;
     string Vibronoe;
@@ -31,6 +32,7 @@ public partial class MainWindow : Window
             FontSize = 35
         };
         Format.Children.Add(Itog);
+        Raskidka();
     }
 
 
@@ -115,6 +117,12 @@ public partial class MainWindow : Window
     void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
     {
         Opredelenie = true;
+    }
+
+    void NazatieRandoma(object? nalichie, RoutedEventArgs a)
+    {
+        Pole.Children.Clear();
+        Raskidka();
     }
 
 
@@ -228,4 +236,12 @@ public partial class MainWindow : Window
         }
     }
 
+
+   void Raskidka ()
+    {
+        var figurs = new List<String> {"Квадрат", "4-х угольник", "Ромб" };
+        Vibronoe = figurs[sluchai.Next(figurs.Count)];
+        var Sluchainost = new Point(sluchai.Next(0, (int)Pole.Bounds.Width), sluchai.Next(0, (int)Pole.Bounds.Height));
+        Otrisovka(Sluchainost);
+    }
 }

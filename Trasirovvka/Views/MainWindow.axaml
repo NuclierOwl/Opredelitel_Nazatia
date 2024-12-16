@@ -19,6 +19,7 @@
 			<Button Content="Квадрат" Click="TuykKvadro" Margin="5"/>
 			<Button Content="Прямоугольник" Click="TuykPramo" Margin="5"/>
 			<Button Content="Ромб" Click="TuykRomb" Margin="5"/>
+			<Button Content="Мне повезет" Click="NazatieRandoma" Margin="5"/>
 			<Button Content="Проверить попадание" Click="NazatieOpredelitela" Margin="5"/>
 		</StackPanel>
 	</Grid>
