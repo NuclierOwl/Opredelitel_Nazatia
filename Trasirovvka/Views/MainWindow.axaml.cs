@@ -42,27 +42,24 @@ public partial class MainWindow : Window
         Console.WriteLine(Rezultat);
     }
 
-
-    Rectangle CreateKvadro() => new Rectangle
-    {
-        Width = 60,
-        Height = 60,
-        Fill = Brushes.DeepPink
-    };
-
-
-    Polygon CreatePolygon(IEnumerable<Point> points, IBrush fill) => new Polygon
+    Polygon CreatePolygon(IEnumerable<Point> points, IBrush fill) => new Polygon // содание фегуры
     {
         Points = new AvaloniaList<Point>(points),
         Fill = fill
     };
 
 
-    void Otrisovka(Point Tuyk)
+    void Otrisovka(Point Tuyk) // определение какую фигуру необходимо создать
     {
         Forma = Vibronoe switch
         {
-            "Квадрат" => CreateKvadro(),
+            "Квадрат" => CreatePolygon(new List<Point>
+        {
+            new Point (0, 0),
+            new Point (60, 0),
+            new Point (60, 60),
+            new Point (0, 60)
+        }, Brushes.DeepPink),
             "4-х угольник" => CreatePolygon(new List<Point>
         {
             new Point (30, 0),
@@ -90,7 +87,7 @@ public partial class MainWindow : Window
     }
 
 
-    void MestoFormi(Point Tap)
+    void MestoFormi(Point Tap) // определения места добовления фегуры
     {
         double visota = Forma is Polygon ? 50 : Forma.Bounds.Height;
         double shirina = Forma is Polygon ? 50 : Forma.Bounds.Width;
@@ -98,43 +95,43 @@ public partial class MainWindow : Window
         Canvas.SetTop(Forma, Tap.Y - visota / 2);
     }
 
-    void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
+    void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs a)// кнопка для квадрата
     {
         Vibronoe = "Квадрат";
         Opredelenie = false;
     }
 
-    void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
+    void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a) // кнопка для 4-х угольника
     {
         Vibronoe = "4-х угольник";
         Opredelenie = false;
     }
 
-    void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
+    void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a) // кнопка для ромба
     {
         Vibronoe = "Ромб";
         Opredelenie = false;
     }
 
-    void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
+    void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)// кнопка для определителя попаданий
     {
         Opredelenie = true;
     }
 
-    void NazatieRandoma(object? nalichie, RoutedEventArgs a)
+    void NazatieRandoma(object? nalichie, RoutedEventArgs a) // кнопка для случайной позиции фигуры
     {
         Pole.Children.Clear();
         Raskidka();
     }
 
-    void Obnulenie(object? nalichie, RoutedEventArgs a)
+    void Obnulenie(object? nalichie, RoutedEventArgs a) // кнопка для очистки экрана
     {
         Pole.Children.Clear();
         Opredelenie = false;
     }
 
 
-    void NazatieVOkno(object? nalichie, PointerPressedEventArgs a)
+    void NazatieVOkno(object? nalichie, PointerPressedEventArgs a) // определение попадения в окно
     {
         var risovka = a.GetPosition(Pole);
 
@@ -151,7 +148,7 @@ public partial class MainWindow : Window
     }
 
 
-    IList<Point> GetMnogougolPoints(Polygon pol)
+    IList<Point> GetMnogougolPoints(Polygon pol) // получение точек многоугольнка
     {
         return pol.Points
             .Select(l => new Point(l.X + Canvas.GetLeft(pol), l.Y + Canvas.GetTop(pol)))
@@ -159,7 +156,7 @@ public partial class MainWindow : Window
     }
 
 
-    bool GetKvadroTocki(Rectangle rectangle, Point poi)
+    bool GetFiguraTocki(Rectangle rectangle, Point poi) // определение попадения в фигуру
     {
         double verh = Canvas.GetTop(rectangle);
         double levo = Canvas.GetLeft(rectangle);
@@ -167,18 +164,18 @@ public partial class MainWindow : Window
     }
 
 
-    bool Vnutri(Shape Figura, Point Tocka)
+    bool Vnutri(Shape Figura, Point Tocka) // определение попадения во внуторь фигуры
     {
         return Figura switch
         {
-            Rectangle r => GetKvadroTocki(r, Tocka),
+            Rectangle r => GetFiguraTocki(r, Tocka),
             Polygon pol => VnutriFigur(Tocka, GetMnogougolPoints(pol)),
             _ => false
         };
     }
 
 
-    bool VnutriFigur(Point poi, IList<Point> figura)
+    bool VnutriFigur(Point poi, IList<Point> figura) // определение нахождения точки внутри фигуры
     {
         int h = figura.Count - 1;
         bool vnutri = false;
@@ -198,7 +195,7 @@ public partial class MainWindow : Window
     }
 
 
-    bool NaStorone(Point poi, IList<Point> figura)
+    bool NaStorone(Point poi, IList<Point> figura) // определение нахождения точки на стороне фигуры
     {
         for (int i = 0; i < figura.Count; i++)
         {
@@ -211,7 +208,7 @@ public partial class MainWindow : Window
         }
         return false;
     }
-    bool NaLinie(Point pervoe, Point vtoroe, Point tretie)
+    bool NaLinie(Point pervoe, Point vtoroe, Point tretie) // определение нахождения точки на линие
     {
         double crossProduct = (pervoe.Y - vtoroe.Y) * (tretie.X - vtoroe.X) - (pervoe.X - vtoroe.X) * (tretie.Y - vtoroe.Y);
         if (Math.Abs(crossProduct) > 0.0001) return false;
@@ -222,7 +219,7 @@ public partial class MainWindow : Window
         double squaredLengthBA = (tretie.X - vtoroe.X) * (tretie.X - vtoroe.X) + (tretie.Y - vtoroe.Y) * (tretie.Y - vtoroe.Y);
         return dotProduct <= squaredLengthBA;
     }
-    void Popadanie(Point Tuyk)
+    void Popadanie(Point Tuyk) // определитель попадания
     {
         if (Opredelenie)
         {
@@ -240,7 +237,7 @@ public partial class MainWindow : Window
     }
 
 
-    void Raskidka()
+    void Raskidka() // отрисовка фигуры в случайном месте
     {
         var figurs = new List<String> { "Квадрат", "4-х угольник", "Ромб" };
         Vibronoe = figurs[sluchai.Next(figurs.Count)];
