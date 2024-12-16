@@ -102,16 +102,19 @@ public partial class MainWindow : Window
     void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "Квадрат";
+        Opredelenie = false;
     }
 
     void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "4-х угольник";
+        Opredelenie = false;
     }
 
     void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "Ромб";
+        Opredelenie = false;
     }
 
     void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
@@ -123,6 +126,11 @@ public partial class MainWindow : Window
     {
         Pole.Children.Clear();
         Raskidka();
+    }
+    void Obnulenie(object? nalichie, RoutedEventArgs a)
+    {
+        Pole.Children.Clear();
+        Opredelenie = false;
     }
 
 
@@ -218,10 +226,9 @@ public partial class MainWindow : Window
     {
         if (Opredelenie)
         {
-            if (Forma != null)
+            if (Forma != null&& Vnutri(Forma,Tuyk))
             {
-                if (Vnutri(Forma,Tuyk))
-                {
+              
                     UpdateItog($"Попадание! \nФигура: {Vibronoe}", Brushes.Lime);
                 }
                 else
@@ -229,12 +236,7 @@ public partial class MainWindow : Window
                     UpdateItog("Не попал!", Brushes.Crimson);
                 }
             }
-            else
-            {
-                UpdateItog("Здесь нечего нет!", Brushes.Orange);
-            }
         }
-    }
 
 
    void Raskidka ()
@@ -244,4 +246,21 @@ public partial class MainWindow : Window
         var Sluchainost = new Point(sluchai.Next(0, (int)Pole.Bounds.Width), sluchai.Next(0, (int)Pole.Bounds.Height));
         Otrisovka(Sluchainost);
     }
-}
+
+    /*
+      void RaskidkaPoFiguram()
+    {
+        Vibronoe = "Квадрат";
+        var SluchainostKvadro = new Point(sluchai.Next(0, (int)Pole.Bounds.Width), sluchai.Next(0, (int)Pole.Bounds.Height));
+        Otrisovka(SluchainostKvadro);
+
+        Vibronoe = "4-х угольник";
+        var SluchainostUgolnik = new Point(sluchai.Next(0, (int)Pole.Bounds.Width), sluchai.Next(0, (int)Pole.Bounds.Height));
+
+        Otrisovka(SluchainostUgolnik);
+        Vibronoe = "Ромб";
+        var SluchainostRomb = new Point(sluchai.Next(0, (int)Pole.Bounds.Width), sluchai.Next(0, (int)Pole.Bounds.Height));
+        Otrisovka(SluchainostRomb);
+    }
+    */
+} 
