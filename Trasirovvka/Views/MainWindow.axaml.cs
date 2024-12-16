@@ -21,7 +21,7 @@ public partial class MainWindow : Window
     TextBlock Itog;
     string Vibronoe;
     Shape? Forma;
-    public MainWindow()
+    public MainWindow()// основное окно
     {
         InitializeComponent();
         Itog = new TextBlock
@@ -35,8 +35,7 @@ public partial class MainWindow : Window
         Raskidka();
     }
 
-
-    void UpdateItog(string Rezultat, IBrush cvet)
+    void UpdateItog(string Rezultat, IBrush cvet) // обновление выводимого текста
     {
         Itog.Text = Rezultat;
         Itog.Foreground = cvet;
@@ -93,7 +92,7 @@ public partial class MainWindow : Window
 
     void MestoFormi(Point Tap)
     {
-        double visota =Forma is Polygon ? 50 : Forma.Bounds.Height;
+        double visota = Forma is Polygon ? 50 : Forma.Bounds.Height;
         double shirina = Forma is Polygon ? 50 : Forma.Bounds.Width;
         Canvas.SetLeft(Forma, Tap.X - shirina / 2);
         Canvas.SetTop(Forma, Tap.Y - visota / 2);
@@ -222,26 +221,27 @@ public partial class MainWindow : Window
         double squaredLengthBA = (tretie.X - vtoroe.X) * (tretie.X - vtoroe.X) + (tretie.Y - vtoroe.Y) * (tretie.Y - vtoroe.Y);
         return dotProduct <= squaredLengthBA;
     }
-    async void Popadanie(Point Tuyk)
+    void Popadanie(Point Tuyk)
     {
         if (Opredelenie)
         {
-            if (Forma != null&& Vnutri(Forma,Tuyk))
+            if (Forma != null && Vnutri(Forma, Tuyk))
             {
-              
-                    UpdateItog($"Попадание! \nФигура: {Vibronoe}", Brushes.Lime);
-                }
-                else
-                {
-                    UpdateItog("Не попал!", Brushes.Crimson);
-                }
+                UpdateItog($"Попадание! \nФигура: {Vibronoe}", Brushes.Lime);
+            }
+            else
+            {
+                var figurs = new List<String> { "Не попал!", "Нет контакта!", "Мимо!" };
+                string mes = figurs[sluchai.Next(figurs.Count)];
+                UpdateItog($"{mes}", Brushes.Crimson);
             }
         }
+    }
 
 
-   void Raskidka ()
+    void Raskidka()
     {
-        var figurs = new List<String> {"Квадрат", "4-х угольник", "Ромб" };
+        var figurs = new List<String> { "Квадрат", "4-х угольник", "Ромб" };
         Vibronoe = figurs[sluchai.Next(figurs.Count)];
         var Sluchainost = new Point(sluchai.Next(0, (int)Pole.Bounds.Width), sluchai.Next(0, (int)Pole.Bounds.Height));
         Otrisovka(Sluchainost);
@@ -263,4 +263,4 @@ public partial class MainWindow : Window
         Otrisovka(SluchainostRomb);
     }
     */
-} 
+}
