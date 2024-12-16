@@ -8,6 +8,7 @@ using Avalonia.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Brushes = Avalonia.Media.Brushes;
 using Point = Avalonia.Point;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
@@ -32,7 +33,6 @@ public partial class MainWindow : Window
             FontSize = 35
         };
         Format.Children.Add(Itog);
-        Raskidka();
     }
 
     void UpdateItog(string Rezultat, IBrush cvet) // обновление выводимого текста
@@ -126,6 +126,7 @@ public partial class MainWindow : Window
         Pole.Children.Clear();
         Raskidka();
     }
+
     void Obnulenie(object? nalichie, RoutedEventArgs a)
     {
         Pole.Children.Clear();
@@ -135,18 +136,18 @@ public partial class MainWindow : Window
 
     void NazatieVOkno(object? nalichie, PointerPressedEventArgs a)
     {
-        var pointerPosition = a.GetPosition(Pole);
+        var risovka = a.GetPosition(Pole);
 
         if (Opredelenie)
         {
-            Popadanie(pointerPosition);
+            Popadanie(risovka);
             return;
         }
 
         if (string.IsNullOrEmpty(Vibronoe)) return;
 
         Pole.Children.Clear();
-        Otrisovka(pointerPosition);
+        Otrisovka(risovka);
     }
 
 
@@ -247,7 +248,7 @@ public partial class MainWindow : Window
         Otrisovka(Sluchainost);
     }
 
-    /*
+  /*  
       void RaskidkaPoFiguram()
     {
         Vibronoe = " вадрат";
