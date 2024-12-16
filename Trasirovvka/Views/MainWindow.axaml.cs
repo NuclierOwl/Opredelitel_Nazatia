@@ -32,23 +32,31 @@ public partial class MainWindow : Window
         };
         Format.Children.Add(Itog);
     }
+
+
     void UpdateItog(string Rezultat, IBrush cvet)
     {
         Itog.Text = Rezultat;
         Itog.Foreground = cvet;
         Console.WriteLine(Rezultat);
     }
+
+
     Rectangle CreateKvadro() => new Rectangle
     {
         Width = 60,
         Height = 60,
         Fill = Brushes.DeepPink
     };
+
+
     Polygon CreatePolygon(IEnumerable<Point> points, IBrush fill) => new Polygon
     {
         Points = new AvaloniaList<Point>(points),
         Fill = fill
     };
+
+
     void Otrisovka(Point Tuyk)
     {
         Forma = Vibronoe switch
@@ -79,6 +87,8 @@ public partial class MainWindow : Window
             Pole.Children.Add(Forma);
         }
     }
+
+
     void MestoFormi(Point Tap)
     {
         double visota =Forma is Polygon ? 50 : Forma.Bounds.Height;
@@ -86,22 +96,28 @@ public partial class MainWindow : Window
         Canvas.SetLeft(Forma, Tap.X - shirina / 2);
         Canvas.SetTop(Forma, Tap.Y - visota / 2);
     }
+
     void TuykKvadro(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "Квадрат";
     }
+
     void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "4-х угольник";
     }
+
     void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
         Vibronoe = "Ромб";
     }
+
     void NazatieOpredelitela(object? nalichie, RoutedEventArgs a)
     {
         Opredelenie = true;
     }
+
+
     void NazatieVOkno(object? nalichie, PointerPressedEventArgs a)
     {
         var pointerPosition = a.GetPosition(Pole);
@@ -117,18 +133,24 @@ public partial class MainWindow : Window
         Pole.Children.Clear();
         Otrisovka(pointerPosition);
     }
+
+
     IList<Point> GetMnogougolPoints(Polygon pol)
     {
         return pol.Points
             .Select(l => new Point(l.X + Canvas.GetLeft(pol), l.Y + Canvas.GetTop(pol)))
             .ToList();
     }
+
+
     bool GetKvadroTocki(Rectangle rectangle, Point poi)
     {
         double verh = Canvas.GetTop(rectangle);
         double levo = Canvas.GetLeft(rectangle);
         return poi.X >= levo && poi.X <= levo + rectangle.Width && poi.Y >= verh && poi.Y <= levo + rectangle.Height;
     }
+
+
     bool Vnutri(Shape Figura, Point Tocka)
     {
         return Figura switch
@@ -138,6 +160,8 @@ public partial class MainWindow : Window
             _ => false
         };
     }
+
+
     bool VnutriFigur(Point poi, IList<Point> figura)
     {
         int h = figura.Count - 1;
@@ -156,6 +180,8 @@ public partial class MainWindow : Window
         }
         return vnutri || NaStorone(poi, figura);
     }
+
+
     bool NaStorone(Point poi, IList<Point> figura)
     {
         for (int i = 0; i < figura.Count; i++)
