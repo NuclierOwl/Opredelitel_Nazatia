@@ -4,11 +4,11 @@
         Title="Трасировка"
 		Icon="/Assets/avalonia-logo.ico"
         Width="1200"
-        Height="800">
+        Height="600">
 	<Grid Name="Format">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1*" />
-			<ColumnDefinition Width="5*" />
+			<ColumnDefinition Width="2*" />
 		</Grid.ColumnDefinitions>
 		<Canvas Name="Pole"
                 Grid.Column="1"

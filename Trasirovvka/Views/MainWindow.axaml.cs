@@ -8,7 +8,6 @@ using Avalonia.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Brushes = Avalonia.Media.Brushes;
 using Point = Avalonia.Point;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
@@ -24,8 +23,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Pole = new Canvas();
-        Format.Children.Add(Pole);
         Itog = new TextBlock
         {
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
@@ -35,12 +32,11 @@ public partial class MainWindow : Window
         };
         Format.Children.Add(Itog);
     }
-    async void UpdateItog(string Rezultat, IBrush cvet)
+    void UpdateItog(string Rezultat, IBrush cvet)
     {
         Itog.Text = Rezultat;
         Itog.Foreground = cvet;
         Console.WriteLine(Rezultat);
-        await Task.Delay(100);
     }
     Rectangle CreateKvadro() => new Rectangle
     {
@@ -58,7 +54,7 @@ public partial class MainWindow : Window
         Forma = Vibronoe switch
         {
             "Квадрат" => CreateKvadro(),
-            "4-х угол" => CreatePolygon(new List<Point>
+            "4-х угольник" => CreatePolygon(new List<Point>
         {
             new Point (30, 0),
             new Point (70, 25),
@@ -96,7 +92,7 @@ public partial class MainWindow : Window
     }
     void TuykPramo(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
-        Vibronoe = "4-х угол";
+        Vibronoe = "4-х угольник";
     }
     void TuykRomb(object? sender, Avalonia.Interactivity.RoutedEventArgs a)
     {
@@ -184,7 +180,7 @@ public partial class MainWindow : Window
         double squaredLengthBA = (tretie.X - vtoroe.X) * (tretie.X - vtoroe.X) + (tretie.Y - vtoroe.Y) * (tretie.Y - vtoroe.Y);
         return dotProduct <= squaredLengthBA;
     }
-    void Popadanie(Point Tuyk)
+    async void Popadanie(Point Tuyk)
     {
         if (Opredelenie)
         {
@@ -192,7 +188,7 @@ public partial class MainWindow : Window
             {
                 if (Vnutri(Forma,Tuyk))
                 {
-                    UpdateItog("Попадание!", Brushes.Lime);
+                    UpdateItog($"Попадание! \nФигура: {Vibronoe}", Brushes.Lime);
                 }
                 else
                 {
